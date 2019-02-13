@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// enable auth routes except for register ones
+Auth::routes(['register' => false]);
+
+Route::get('/home', 'HomeController@index')->name('home');
