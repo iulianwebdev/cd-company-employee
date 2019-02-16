@@ -43,17 +43,22 @@ class CompanyControllerTest extends TestCase
      *
      * @return void
      */
-    public function canShowAll()
+    public function index_returns_all_companies()
     {
-        
-        $fakeCompanies = factory(Company::class, 10)->make();
+        $fakeCompanies = factory(Company::class, 5)->states('with_id')->make();
 
         $this->mock
             ->shouldReceive('all')
             ->once()
             ->andReturn($fakeCompanies);
 
-        $response = $this->call('get', 'companies');
+        $response = $this->json('get', 'companies');
+        
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => ['id', 'name','email','logo','website'],
+            ],
+        ], $response->json());
 
         $response->assertStatus(200);
     }
