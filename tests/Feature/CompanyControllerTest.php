@@ -5,15 +5,15 @@ namespace Tests\Unit;
 use App\Company;
 use App\Contracts\CompanyStore;
 use App\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use \Mockery;
 
 class CompanyControllerTest extends TestCase
 {
 
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private $repository;
 
@@ -22,27 +22,39 @@ class CompanyControllerTest extends TestCase
         parent::setUp();
         $this->seed();
 
-        $this->repository = resolve(CompanyStore::class);
+        $class = CompanyStore::class;
 
+        $this->mock = Mockery::mock($class);
 
+        $this->app->instance($class, $this->mock);
+ 
+        return $this->mock;
+    }
+
+    public function tearDown() 
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
 
     /**
-     * test we can create a company via the repository.
+     * @test READ endpoint for Companies 
      *
      * @return void
      */
-    public function test_index_returns_all_companies()
+    public function canShowAll()
     {
-        $fields = [
-            'name' => 'Test Company',
-            'email' => 'test@company.com',
-        ];
         
-        $company = $this->repository->create($fields);
+        $fakeCompanies = factory(Company::class, 10)->make();
 
-        $testCompany = Company::where('email', $fields['email'])->first();
-        $this->assertEquals($testCompany->id, $company->id);
+        $this->mock
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn($fakeCompanies);
+
+        $response = $this->call('get', 'companies');
+
+        $response->assertStatus(200);
     }
 }
