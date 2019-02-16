@@ -6,9 +6,10 @@
 /public/js
 /public/fonts
 /public/.htaccess
-/public/mix-manifest.json
+/public/mix-manifest.jso
 /storage/*.key
 /vendor
+_ide*
 .env
 .phpunit.result.cache
 Homestead.json
