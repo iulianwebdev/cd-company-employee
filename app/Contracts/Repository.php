@@ -7,6 +7,8 @@ interface Repository {
 
     public function find(int $id);
     
+    public function findOrFail(int $id);
+    
     public function all();
     
     public function create(array $data);

@@ -23,5 +23,10 @@ class Company extends Model
     {
         return $this->hasMany(Employee::class);
     }
+
+    public function getLogoNameAttribute() 
+    {
+        return str_slug($this->name).'-'.$this->id;
+    }
         
 }

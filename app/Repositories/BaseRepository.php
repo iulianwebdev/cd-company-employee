@@ -19,17 +19,22 @@ abstract class BaseRepository
         $this->model = $model;
     }
 
-    public function find(int $id) 
+    public function find(int $id)
     {
         return $this->model->find($id);
     }
 
+    public function findOrFail(int $id) 
+    {
+        return $this->model->findOrFail($id);
+    }
+    
     public function all()
     {
         return $this->model->all();
     }
     
-    public function create(array $data)
+    public function create(array $data): Model
     {
         return $this->model->create($data);
     }
@@ -52,10 +57,11 @@ abstract class BaseRepository
         $this->model = $model;
     }
 
-    public function getModel($arg) 
+    public function getModel() 
     {
         return $this->model;
     }
+
 
     /**
      * Eager loading abstract implementation

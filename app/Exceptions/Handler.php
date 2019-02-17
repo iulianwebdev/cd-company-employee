@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,17 +48,24 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($request->wantsJson())
+        if ($request->wantsJson() && $exception instanceof ModelNotFoundException)
            {
 
-                $message = 'An unknown error has occured';
+                $response = [
+                    'data' => [
+                        'error' => 'An unknown error has occured',
+                        'details' => [],
+                        'status' => 404
+                    ]
+                ];
 
                 if (Auth::check()) {
-                    $message = $exception->getMessage();
+                    $response['data']['error'] = $exception->getMessage();
+                    $response['data']['details'] = get_class($exception);
+                    $response['data']['status'] = 400;
                 }
-                return response()->json([
-                    'error' => $message
-                ], 404);
+
+                return response()->json($response, $response['data']['status']);
            }
 
         return parent::render($request, $exception);
