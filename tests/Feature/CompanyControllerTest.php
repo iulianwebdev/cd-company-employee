@@ -175,8 +175,20 @@ class CompanyControllerTest extends TestCase
 
         $response = $this->json('PUT', "/companies/{$existingCompany->id}", $newCompany->toArray());
 
+        $json = $response->json();
+
+        // dd($json);
         $response->assertJsonStructure([
             'data' => ['id', 'name', 'email', 'logo', 'website'],
+        ]);
+
+        $this->assertEquals($json['data'], [
+            'id' => $existingCompany->id,
+            'name' => $newCompany->name,
+            'logo' => str_slug($newCompany->name).'-'.$existingCompany->id.'.png',
+            'website' => $newCompany->website,
+            'email' => $newCompany->email,
+            'employee_count' => $existingCompany->employees()->count(),
         ]);
         $response->assertStatus(Response::HTTP_OK);
     }

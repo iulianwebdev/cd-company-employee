@@ -95,10 +95,10 @@ class CompanyController extends Controller
         $image = $request->file('logo', '');
 
         $data = $request->toArray();
-
         if ($image) {
-            $newFileName = $this->imageManager->putFile($image, $existingCompany->logo_name);
-            $data['logo'] = $newFileName;
+            $newLogoName = $this->store->getLogoName($data['name'], $id);
+            $newLogoFileName = $this->imageManager->putFile($image, $newLogoName);
+            $data['logo'] = $newLogoFileName;
         } else {
             unset($data['logo']);
         }

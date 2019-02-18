@@ -1,16 +1,14 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
 use App\Contracts\Repository;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
 
 /**
- * Base Repository abstract class
+ * Base Repository abstract class.
  */
-abstract class BaseRepository
+abstract class BaseRepository implements Repository
 {
     protected $model;
 
@@ -24,7 +22,7 @@ abstract class BaseRepository
         return $this->model->find($id);
     }
 
-    public function findOrFail(int $id) 
+    public function findOrFail(int $id)
     {
         return $this->model->findOrFail($id);
     }
@@ -33,7 +31,7 @@ abstract class BaseRepository
     {
         return $this->model->all();
     }
-    
+
     public function create(array $data): Model
     {
         return $this->model->create($data);
@@ -42,6 +40,7 @@ abstract class BaseRepository
     public function update(int $id, array $data)
     {
         $existing = $this->model->findOrFail($id);
+
         return $existing->update($data);
     }
 
@@ -50,12 +49,12 @@ abstract class BaseRepository
         return $this->model->destroy($id);
     }
 
-    public function setModel(Model $model) 
+    public function setModel(Model $model)
     {
         $this->model = $model;
     }
 
-    public function getModel() 
+    public function getModel()
     {
         return $this->model;
     }

@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @mixin \Eloquent
  */
-
 class Company extends Model
 {
-    
     protected $fillable = [
         'name',
         'email',
@@ -19,14 +17,13 @@ class Company extends Model
         'website',
     ];
 
-    public function employees() : HasMany  
+    public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);
     }
 
-    public function getLogoNameAttribute() 
+    public function getLogoNameAttribute()
     {
         return str_slug($this->name).'-'.$this->id;
     }
-        
 }
