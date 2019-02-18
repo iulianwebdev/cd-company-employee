@@ -26,3 +26,5 @@ Route::get('/', 'HomeController@index')->name('dashboard');
 // normaly this would sit in the api.php file with 
 // any kind of token based auth 
 Route::resource('companies', 'CompanyController')->except(['edit','create'])->middleware('auth');
+
+Route::resource('companies.employee', 'EmployeeController')->except(['edit','create'])->middleware('auth');

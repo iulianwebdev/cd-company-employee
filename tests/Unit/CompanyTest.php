@@ -108,8 +108,9 @@ class CompanyTest extends TestCase
         $deletedSuccesfully = $this->repository->delete($companyToDelete->id);
 
         $remainingCompanies = $this->repository->all();
-
-        $this->assertTrue($deletedSuccesfully == 1);
+        
+        $this->assertNotEmpty($deletedSuccesfully);
+        
         $this->assertLessThan($companies->count(), $remainingCompanies->count());
 
         $this->assertEmpty($this->repository->find($companyToDelete->id));

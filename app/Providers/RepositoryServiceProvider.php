@@ -3,14 +3,13 @@
 namespace App\Providers;
 
 use App\Contracts\CompanyStore;
+use App\Contracts\EmployeeStore;
 use App\Repositories\CompanyRepository;
+use App\Repositories\EmployeeRepository;
 use Illuminate\Support\ServiceProvider;
 
-class CompanyRepositoryServiceProvider extends ServiceProvider
+class RepositoryServiceProvider extends ServiceProvider
 {
-
-    protected $defer = true;
-
     /**
      * Register services.
      *
@@ -22,6 +21,12 @@ class CompanyRepositoryServiceProvider extends ServiceProvider
             CompanyStore::class,
             CompanyRepository::class
         );
+
+        $this->app->bind(
+            EmployeeStore::class,
+            EmployeeRepository::class
+        );
+        
     }
 
     /**
@@ -32,15 +37,5 @@ class CompanyRepositoryServiceProvider extends ServiceProvider
     public function boot()
     {
         //
-    }
-
-    /**
-    * Get the services provided by the provider.
-    *
-    * @return array
-    */
-    public function provides()
-    {
-      return [CompanyRepository::class];
     }
 }

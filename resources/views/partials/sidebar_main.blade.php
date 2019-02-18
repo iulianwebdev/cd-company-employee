@@ -32,9 +32,18 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">Actions</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="{{ route('dashboard') }}"><i class="fa fa-link"></i> <span>Link</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-            <li class="treeview">
+            <router-link tag="li" :to="{name:'dashboard'}">
+                <a><i class="fa fa-link"></i> <span>Dashboard</span></a>
+            </router-link>
+            <router-link tag="li" :to="{name:'companies'}">
+                <a><i class="fa fa-building"></i> <span>Companies</span></a>
+            </router-link>
+             <router-link tag="li" :to="{name:'employees'}">
+                <a><i class="fa fa-user"></i> <span>Employees</span></a>
+            </router-link>
+            
+
+            <!-- <li class="treeview">
                 <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
                     <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -44,7 +53,7 @@
                     <li><a href="#">Link in level 2</a></li>
                     <li><a href="#">Link in level 2</a></li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
         <!-- /.sidebar-menu -->
     </section>

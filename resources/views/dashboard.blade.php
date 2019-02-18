@@ -8,5 +8,5 @@
 @endsection
 
 @section('content')
-    <component :is="activeComponent"></component>
+    <router-view></router-view>
 @endsection

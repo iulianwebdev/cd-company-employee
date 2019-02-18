@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Concerns\hasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @mixin \Eloquent
@@ -19,7 +19,7 @@ class Company extends Model
         'website',
     ];
 
-    public function employees() : hasMany  
+    public function employees() : HasMany  
     {
         return $this->hasMany(Employee::class);
     }

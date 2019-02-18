@@ -11,6 +11,8 @@
 /vendor
 _ide*
 .env
+.vscode
+.eslint*
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

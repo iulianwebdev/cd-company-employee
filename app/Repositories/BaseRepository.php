@@ -14,7 +14,7 @@ abstract class BaseRepository
 {
     protected $model;
 
-    function __construct(Model $model)
+    public function __construct(Model $model)
     {
         $this->model = $model;
     }
@@ -28,7 +28,7 @@ abstract class BaseRepository
     {
         return $this->model->findOrFail($id);
     }
-    
+
     public function all()
     {
         return $this->model->all();
@@ -39,16 +39,14 @@ abstract class BaseRepository
         return $this->model->create($data);
     }
 
-    /**
-     * @throws ModelNotFoundException
-     */
     public function update(int $id, array $data)
     {
         $existing = $this->model->findOrFail($id);
         return $existing->update($data);
     }
 
-    public function delete($id) {
+    public function delete(int $id)
+    {
         return $this->model->destroy($id);
     }
 
@@ -60,16 +58,5 @@ abstract class BaseRepository
     public function getModel() 
     {
         return $this->model;
-    }
-
-
-    /**
-     * Eager loading abstract implementation
-     * @param  array|string $relations 
-     * @return Model
-     */
-    public function with($relations) 
-    {
-        return $this->model->with($relations);
     }
 }

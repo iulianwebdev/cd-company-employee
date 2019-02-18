@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Company;
 use App\Contracts\CompanyStore;
+use App\Employee;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -25,12 +26,13 @@ class CompanyControllerTest extends TestCase
         parent::setUp();
         $this->seed();
 
-        $class = CompanyStore::class;
+        $this->mock = Mockery::mock(CompanyStore::class);
+    }
 
-        $this->mock = Mockery::mock($class);
-
-        $this->app->instance($class, $this->mock);
-     }
+    private function withMock() 
+    {
+        $this->app->instance(CompanyStore::class, $this->mock);
+    }
 
     public function tearDown() 
     {
@@ -41,6 +43,7 @@ class CompanyControllerTest extends TestCase
     /** @test */
     public function endpoint_not_accessible_for_guests() 
     {
+        $this->withMock();
         // one endpoint will do for now
         $response = $this->json('get', 'companies');
 
@@ -55,6 +58,7 @@ class CompanyControllerTest extends TestCase
      */
     public function index_returns_all_companies()
     {
+        $this->withMock();
         $this->logIn();
 
         $fakeCompanies = factory(Company::class, 5)->states('with_id')->make();
@@ -79,6 +83,7 @@ class CompanyControllerTest extends TestCase
     /** @test */
     public function show_returns_one_company() 
     {
+        $this->withMock();
         $this->logIn();
         
         $fakeCompany = factory(Company::class)->states('with_id')->make();
@@ -102,6 +107,8 @@ class CompanyControllerTest extends TestCase
      */
     public function store_method_creates_new_company_with_logo() 
     {
+        $this->withMock();
+        $this->withoutMiddleware();
         $this->logIn();
 
         Storage::fake('public');
@@ -123,7 +130,7 @@ class CompanyControllerTest extends TestCase
             ->with($newCompany->id, ['logo' => $logo])
             ->andReturn(true);
 
-        $response = $this->json('POST', 'companies', $newCompany->toArray());
+        $response = $this->json('POST', 'companies/', $newCompany->toArray());
         
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -132,6 +139,7 @@ class CompanyControllerTest extends TestCase
         );
         
         $json = $response->json();
+        
 
         Storage::disk('public')->assertExists("images/{$json['data']['logo']}");
     }
@@ -148,6 +156,7 @@ class CompanyControllerTest extends TestCase
      */
     public function test_bad_format_attributes_receive_validation_error_msg(array $attrs) 
     {
+        $this->withMock();
         $this->logIn();
 
         $response = $this->json('POST', 'companies', $attrs);
@@ -159,6 +168,7 @@ class CompanyControllerTest extends TestCase
     /** @test */
     public function test_update_returns_ok_status() 
     {
+        $this->withMock();
         $this->logIn();
 
         $company = factory(Company::class)->create();
@@ -167,18 +177,29 @@ class CompanyControllerTest extends TestCase
 
         $newCompany = factory(Company::class)->make([
             'logo' => UploadedFile::fake()->image('logo.png', 100, 100)
-        ]);        
+        ]);
 
-        $this->mock
-            ->shouldReceive('findOrFail')
-            ->once()
-            ->andReturn($company)
-            ->shouldReceive('update')
-            ->once()
-            ->with($company->id, $newCompany->toArray())
-            ->andReturn(true);
+        $employee = factory(Employee::class)->make();
         
-        $response = $this->json('PUT', "/companies/{$company->id}", $newCompany->toArray());
+        $data = $newCompany->toArray();
+        $this->mock
+        ->shouldReceive('findOrFail')
+        ->once()
+        ->andReturn($company)
+        ->shouldReceive('update')
+        ->once()
+        ->with($company->id, $data)
+        ->andReturn(true);
+        
+        $newCompany->logo = 'file';
+        $newCompany->employees = $employee->toArray();
+        $this->mock
+        ->shouldReceive('findOrFail')
+        ->once()
+        ->with($company->id)
+        ->andReturn($newCompany);
+        
+        $response = $this->json('PUT', "/companies/{$company->id}", $data);
         // dd($response);
         $response->assertStatus(Response::HTTP_OK);
     }
@@ -186,6 +207,7 @@ class CompanyControllerTest extends TestCase
     /** @test */
     public function test_destroy_method() 
     {
+        $this->withMock();
         $this->logIn();
 
         Storage::fake('public');
@@ -197,26 +219,40 @@ class CompanyControllerTest extends TestCase
         Storage::disk('public')->put("images/{$company->logo}", 'Sample text');
         
         $this->mock
-            ->shouldReceive('findOrFail')
-            ->once()
-            ->andReturn($company)
             ->shouldReceive('delete')
             ->once()
             ->with(1)
-            ->andReturn(true);
+            ->andReturn($company);
 
         $response = $this->json('DELETE', "/companies/1");
-
         $response->assertStatus(Response::HTTP_OK);
         Storage::disk('public')->assertMissing("images/{$company->logo}");
-
-
     }
 
-    public function logIn($user = null) 
+    /**
+     * @test
+     * @throws ModelRelationNotEmptyException
+     * @return void
+     */
+    public function test_that_company_whith_employees_cant_be_deleted() 
+    {
+        $this->logIn();
+
+        $company = factory(Company::class)->create([]);
+        $employees = factory(Employee::class, 10)->make();
+        $company->employees()->saveMany($employees);
+
+        $response = $this->json('DELETE', "/companies/{$company->id}");
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST);
+    }
+
+
+    private function logIn($user = null) 
     {
         $user = $user ?? factory(User::class)->create();
 
         $this->be($user);
     }
+
 }

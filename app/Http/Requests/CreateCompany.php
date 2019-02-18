@@ -26,10 +26,10 @@ class CreateCompany extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|required|',
+            'name' => 'bail|required|min:4|regex:/^[A-Za-z.,()&\-\s\d]+$/',
             'email' => 'email|unique:companies',
             'website' => 'url',      
-            'logo' => 'file|image|mimes:jpeg,png,gif|dimensions:min_width=100,min_height=100',
+            'logo' => 'nullable|file|image|mimes:jpeg,png,gif|dimensions:min_width=100,min_height=100',
         ];
     }
 }

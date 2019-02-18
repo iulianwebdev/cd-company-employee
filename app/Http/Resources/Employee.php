@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Arr;
 
-class Company extends JsonResource
+class Employee extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +14,6 @@ class Company extends JsonResource
      */
     public function toArray($request)
     {
-        $fields = ['id', 'name', 'email', 'logo', 'website'];
-        $data = Arr::only(parent::toArray($request), $fields); 
-        $data['employee_count'] = count($this->employees);
-        return $data;
+        return parent::toArray($request);
     }
 }

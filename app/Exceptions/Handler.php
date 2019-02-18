@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\ModelRelationNotEmptyException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -48,7 +49,13 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($request->wantsJson() && $exception instanceof ModelNotFoundException)
+        if ($request->wantsJson() 
+            && (
+                $exception instanceof ModelNotFoundException 
+                ||
+                $exception instanceof ModelRelationNotEmptyException
+            )
+        )
            {
 
                 $response = [

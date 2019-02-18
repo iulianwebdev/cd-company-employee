@@ -51,7 +51,6 @@ class CompanyController extends Controller
      */
     public function store(CreateCompany $request)
     {
-        
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -62,15 +61,16 @@ class CompanyController extends Controller
 
         
         $img = $request->file('logo');
-
-        $fileName = $this->imageManager->putFile($img, $newCompany->logo_name);
-
-
-        $this->store->update($newCompany->id, [
-            'logo' => $fileName
-        ]);
-
-        $newCompany->logo = $fileName;
+        
+        if ($img) {
+            $fileName = $this->imageManager->putFile($img, $newCompany->logo_name);
+            
+            $this->store->update($newCompany->id, [
+                'logo' => $fileName
+                ]);
+                
+            $newCompany->logo = $fileName;
+            }
 
         return new CompanyResource($newCompany);
     }
@@ -95,24 +95,25 @@ class CompanyController extends Controller
      */
     public function update(CreateCompany $request, $id)
     {
-
         $existingCompany =  $this->store->findOrFail($id);
-
+        
         $image = $request->file('logo', '');
         
         $data = $request->toArray();
         
         if($image) {
-
+            
             $newFileName = $this->imageManager->putFile($image, $existingCompany->logo_name);
+            $data['logo'] = $newFileName;
         } else {
             unset($data['logo']);
         }
-
+        
         $update = $this->store->update($id, $data);
-
+        
         if ($update) {
-            return response(Response::HTTP_OK);
+            return new CompanyResource($this->store->findOrFail($id));
+            
         }
 
         return response(Response::HTTP_BAD_REQUEST);
@@ -126,20 +127,18 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        $existingCompany = $this->store->findOrFail($id);
-        $deleted = $this->store->delete($existingCompany->id);
-
-        if ($deleted) {
-            if ($existingCompany->logo) {
-                $fileErased = $this->imageManager->deleteFile($existingCompany->logo);
+        $deletedCompany = $this->store->delete($id);
+        
+        if ($deletedCompany->exists()) {
+            if ($deletedCompany->logo) {
+                $fileErased = $this->imageManager->deleteFile($deletedCompany->logo);
                 if (!$fileErased) {
-                    Log::error("File not erased after company deletion. Filename:{$existingCompany->logo}");
+                    Log::error("File not erased after company deletion. Filename:{$deletedCompany->logo}");
                 }
             }
             return response(Response::HTTP_OK);
         }
 
         return response(Response::HTTP_BAD_REQUEST);
-        
     }
 }
