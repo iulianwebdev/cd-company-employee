@@ -1,9 +1,10 @@
 <template>
     <div class="company-employees-wrapper">
-        <div class="list-group">
+        <div class="list-group" v-if="employees.length">
             <a v-on:click="gotoEmployeePage(employee.id)" class="list-group-item" v-for="employee in employees" v-bind:key="employee.id">
                 
-                <strong>{{ employee.name }}</strong>
+                <strong>{{ employee.first_name }}</strong>
+                <strong>{{ employee.last_name }}</strong>
             </a> 
         </div>
 
@@ -50,7 +51,7 @@
                 {companyEmployees: COMPANY_EMPLOYEES}
             ),
             employees(){
-                this.companyEmployees(+this.companyId)
+                return this.companyEmployees(+this.companyId) || []
             }
         },
         watch: {
@@ -59,7 +60,9 @@
         methods: {
             get(){
                 http.getEmployees(this.companyId).then(({data}) => {
+                    // debugger
                     if(data.data.length) {
+                        console.log('trigger commit')
                         this.$store.commit(SET_EMPLOYEES, {companyId:this.companyId, data: data.data})
                     }
                 }, error => {
@@ -75,10 +78,10 @@
             }
         },
         created(){
-            this.get()
-
+            
         },
         mounted() {
+            this.get()
             console.log('Companies mounted.')
         },
 }
