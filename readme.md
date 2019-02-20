@@ -39,6 +39,11 @@ or even
 ```$
 $ php artisan migrate:refresh --seed
 ```
+
+Also check that the app key has been generated in your .env or generate it via artisan
+```$
+$ php artisan key:generate --show
+```
 (if there is existing data this command will erase both data and structure)
 
 At this point you should be able to run the tests and see the login page
