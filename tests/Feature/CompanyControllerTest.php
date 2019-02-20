@@ -79,16 +79,16 @@ class CompanyControllerTest extends TestCase
     /** @test */
     public function show_returns_one_company()
     {
-        $this->withMock();
+        // $this->withMock();
         $this->logIn();
 
-        $fakeCompany = factory(Company::class)->states('with_id')->make();
+        $fakeCompany = factory(Company::class)->create();
 
-        $this->mock
-            ->shouldReceive('find')
-            ->with($fakeCompany->id)
-            ->once()
-            ->andReturn($fakeCompany);
+        // $this->mock
+        //     ->shouldReceive('findOrFail')
+        //     ->with($fakeCompany->id)
+        //     ->once()
+        //     ->andReturn($fakeCompany);
 
         $response = $this->json('GET', "companies/{$fakeCompany->id}");
         $response->assertStatus(Response::HTTP_OK);
