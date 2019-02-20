@@ -10,6 +10,8 @@ interface Repository
 
     public function all();
 
+    public function where($data);
+
     public function create(array $data);
 
     public function update(int $id, array $data);

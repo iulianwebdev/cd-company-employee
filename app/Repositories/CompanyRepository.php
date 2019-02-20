@@ -59,6 +59,6 @@ class CompanyRepository extends BaseRepository implements CompanyStore
         return $this->model
                 ->with('employees')
                 ->find($id)
-                ->employees()->get();
+                ->employees();
     }
 }

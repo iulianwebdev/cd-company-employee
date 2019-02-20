@@ -77,7 +77,9 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        return new CompanyResource($this->store->find($id));
+        $company = $this->store->findOrFail($id);
+
+        return new CompanyResource($company);
     }
 
     /**

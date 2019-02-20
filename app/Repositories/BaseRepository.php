@@ -44,6 +44,11 @@ abstract class BaseRepository implements Repository
         return $existing->update($data);
     }
 
+    public function where($data)
+    {
+        return $this->model->where($data);
+    }
+
     public function delete(int $id)
     {
         return $this->model->destroy($id);
@@ -52,6 +57,8 @@ abstract class BaseRepository implements Repository
     public function setModel(Model $model)
     {
         $this->model = $model;
+
+        return $this;
     }
 
     public function getModel()

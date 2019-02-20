@@ -23,8 +23,13 @@ Auth::routes(['register' => false]);
 Route::get('/', 'HomeController@index')->name('dashboard');
 
 // using statefull routing with sessions for now
-// normaly this would sit in the api.php file with 
-// any kind of token based auth 
-Route::resource('companies', 'CompanyController')->except(['edit','create'])->middleware('auth');
+// normaly this would sit in the api.php file with
+// any kind of token based auth
+Route::resource('companies', 'CompanyController')->except(['edit', 'create'])->middleware('auth');
 
-Route::resource('companies.employee', 'EmployeeController')->except(['edit','create'])->middleware('auth');
+Route::resource('companies.employee', 'EmployeeController')->except(['edit', 'create', 'index'])
+        ->middleware('auth');
+Route::get('/companies/{company}/employee/pages/{page}/{order}/{column?}', 'EmployeeController@index')
+        ->middleware('auth');
+Route::get('/counts', 'HomeController@displayCounts')
+        ->middleware('auth');

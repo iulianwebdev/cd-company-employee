@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Company;
+use App\Employee;
 
 class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -24,5 +23,17 @@ class HomeController extends Controller
     public function index()
     {
         return view('dashboard');
+    }
+
+    /**
+     * Won't abstract this ones
+     * but should be in the repos.
+     */
+    public function displayCounts()
+    {
+        return response([
+            'company_counts' => Company::count(),
+            'employee_counts' => Employee::count(),
+        ], 200);
     }
 }
