@@ -75,7 +75,6 @@
 
         },
         mounted() {
-            console.log('Companies mounted.')
         },
 }
 </script>

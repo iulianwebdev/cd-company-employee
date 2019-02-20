@@ -21,7 +21,6 @@
             // [CompaniesComponentVue.name]: CompaniesComponentVue
         },
         mounted() {
-            console.log('Component mounted.')
         }
     }
 </script>

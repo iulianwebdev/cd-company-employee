@@ -50,11 +50,9 @@ import http from '../services/http';
         },
         mounted() {
           http.getCounts().then(({data}) => {
-            console.log(data)
             this.companiesCount = data.company_counts;
             this.employeesCount = data.employee_counts;
           })
-            console.log('Component mounted.')
         }
     }
 </script>

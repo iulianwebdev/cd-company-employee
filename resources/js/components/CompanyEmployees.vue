@@ -75,7 +75,6 @@
                 http.getEmployees(this.companyId).then(({data}) => {
                     // debugger
                     if(data.data.length) {
-                        console.log('trigger commit')
                         this.$store.commit(SET_EMPLOYEES, {companyId:this.companyId, data: data.data})
                     }
                 }, error => {
@@ -100,7 +99,6 @@
         },
         mounted() {
             this.get()
-            console.log('Companies mounted.')
         },
 }
 </script>
