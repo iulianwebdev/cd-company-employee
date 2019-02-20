@@ -5,8 +5,8 @@
 /public/css
 /public/js
 /public/fonts
-/public/.htaccess
-/public/mix-manifest.jso
+#/public/.htaccess
+#/public/mix-manifest.jso
 /storage/*.key
 /vendor
 _ide*
