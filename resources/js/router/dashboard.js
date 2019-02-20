@@ -1,9 +1,9 @@
-import DashboardWrapperComponent from '../components/DashboardWrapperComponent'
-import DashboardComponent from '../components/DashboardComponent'
-import CompaniesComponent from '../components/CompaniesComponent'
-import CompanyEmployeesComponent from '../components/CompanyEmployeesComponent'
-import CompanyComponent from '../components/CompanyComponent'
-import EmployeesComponent from '../components/EmployeesComponent'
+import DashboardWrapperComponent from '../components/DashboardWrapper'
+import DashboardComponent from '../components/Dashboard'
+import CompaniesComponent from '../components/Companies'
+import CompanyEmployeesComponent from '../components/CompanyEmployees'
+import CompanyComponent from '../components/Company'
+import AllEmployeesComponent from '../components/AllEmployees'
 
 export const routes = [
   {
@@ -36,8 +36,8 @@ export const routes = [
       },
       {
         path: '/employees',
-        name: 'employees',
-        component: EmployeesComponent,
+        name: 'all-employees',
+        component: AllEmployeesComponent,
         props: false
       }
       // {

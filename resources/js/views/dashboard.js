@@ -9,8 +9,7 @@ import defaultAppOptions from '../views'
 
 export const store = new Vuex.Store(defaultStoreOptions)
 export const router = new VueRouter(defaultRouterOptions({ routes,
-  linkActiveClass: 'active', // active class for non-exact links.
-  linkExactActiveClass: 'active' // active class for *exact* links
+  linkExactActiveClass: 'active'
 }))
 
 export const app = window.app = new Vue(defaultAppOptions({

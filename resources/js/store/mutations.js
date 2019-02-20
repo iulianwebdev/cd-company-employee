@@ -24,17 +24,22 @@ export const mutations = {
   },
   [constants.SET_EMPLOYEES] (state, payload = {}) {
     let { companyId, data } = payload
-    console.log(companyId, state.employees)
+    console.log('inside mutation', companyId, state.employees)
     if (state.employees[companyId]) {
       state.employees[companyId].splice(0)
+    } else {
+      Vue.set(state.employees, companyId, [])
     }
-    Vue.set(state.employees, companyId, data)
+    state.employees[companyId].push(...data)
   },
-  [constants.SET_EMPLOYEE] (state, companyId, payload = {}) {
-    console.log('SET_EMPLOYEE', payload)
-    // return
-    let data = payload
-    Vue.set(state.employees, companyId, data)
+  [constants.SET_EMPLOYEE] (state, {companyId, data}) {
+
+    if (!state.employees[companyId]) {
+      Vue.set(state.employees, companyId, [])
+    }
+    
+    state.employees.push(data.data)
+    
   }
 }
 

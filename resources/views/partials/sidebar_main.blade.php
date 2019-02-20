@@ -38,7 +38,7 @@
             <router-link tag="li" :to="{name:'companies'}">
                 <a><i class="fa fa-building"></i> <span>Companies</span></a>
             </router-link>
-             <router-link tag="li" :to="{name:'employees'}">
+             <router-link tag="li" :to="{name:'all-employees'}">
                 <a><i class="fa fa-user"></i> <span>Employees</span></a>
             </router-link>
             

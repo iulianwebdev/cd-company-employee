@@ -1,23 +1,29 @@
 <template>
     <div class="company-employees-wrapper">
-        <div class="list-group" v-if="employees.length">
+    <div class="actions">
+         
+        <router-link :to="{name: 'company', params:{id: companyId}}"><i class="fa fa-arrow-left"></i></router-link>
+        <button class="btn btn-primary pull-right" v-on:click="add">
+            <i class="fa fa-plus"></i> Add
+        </button>
+    </div>
+    
+        <!-- <div class="list-group" v-if="employees.length">
             <a v-on:click="gotoEmployeePage(employee.id)" class="list-group-item" v-for="employee in employees" v-bind:key="employee.id">
                 
                 <strong>{{ employee.first_name }}</strong>
                 <strong>{{ employee.last_name }}</strong>
             </a> 
-        </div>
+        </div> -->
+        <employees v-bind:companyId="companyId"></employees>
+        
 
-        <div class="col-xs-12 text-center">
-            <button class="btn btn-app" v-on:click="add">
-                <i class="fa fa-plus"></i> Add
-            </button>
-        </div>
+
 
         <modal v-on:close="closeModal" v-show="modalVisible" :save="false">
-            <template v-slot:header>Create New Company</template>
+            <template v-slot:header>Add New Employee</template>
             <template v-slot> 
-                <create-form :company-id="+companyId" type='employee' :fields="newEmployeeFields" v-on:close="closeModal"></create-form>
+                <create-form :company-id="+companyId" type='employee' :fields="newEmployeeFields" v-on:close="closeAction"></create-form>
             </template>
         </modal>
     </div>
@@ -27,10 +33,14 @@
     import http from '../services/http'
     import pathMixin from '../mixins/paths'
     import modalMixin from '../mixins/modal'
+    import sortMixin from '../mixins/sort'
+    import paginateMixin from '../mixins/paginate'
+    
     import {
         SET_EMPLOYEES, COMPANY_EMPLOYEES
     } from '../store/constants'
     import {mapGetters} from 'vuex'
+    import Employees from './Employees';
     export default {
         name:'companies-employee',
         data() {
@@ -45,7 +55,10 @@
             }
         },
         props:['companyId'],
-        mixins:[pathMixin, modalMixin],
+        components:{
+            [Employees.name]: Employees
+        },
+        mixins:[pathMixin, modalMixin, sortMixin, paginateMixin],
         computed: {
             ...mapGetters(
                 {companyEmployees: COMPANY_EMPLOYEES}
@@ -75,6 +88,11 @@
             },
             gotoEmployeePage(id) {
                 this.$router.push({'name': 'employee', params: { id }})
+            },
+            closeAction(){
+                // doesn't matter that they race
+                this.get()
+                this.closeModal()
             }
         },
         created(){

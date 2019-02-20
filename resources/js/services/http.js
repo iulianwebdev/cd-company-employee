@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { PER_PAGE } from '../store/constants'
 
 const BASE = '/companies'
 
@@ -27,6 +28,20 @@ export const getCompany = (companyId, params = {}) => axios.get(
   }
 )
 
+
+/**
+ * Get counters
+ *
+ * @return {Promise}
+ *
+ */
+export const getCounts = (params = {}) => axios.get(
+  `/counts`,
+  {
+    params
+  }
+)
+
 /**
  * Delete company by id
  *
@@ -39,6 +54,17 @@ export const deleteCompany = (companyId, params = {}) => axios.post(
   {
     headers: { 'Content-Type': 'multipart/form-data' }
   }
+)
+
+/**
+ * Delete Employee by id
+ *
+ * @return {Promise}
+ *
+ */
+export const deleteEmployee = (companyId, employeeId, params = {}) => axios.post(
+  `${BASE}/${companyId}/employee/${employeeId}`,
+  { _method: 'DELETE' }
 )
 
 /**
@@ -70,7 +96,7 @@ export const updateCompany = (companyId, params = {}) => axios.post(
 )
 
 /**
- * Update enmployee of a company
+ * Update employee of a company
  *
  * @return {Promise}
  *
@@ -98,12 +124,13 @@ export const createEmployee = (companyId, params = {}) => axios.post(
  *
  */
 
-export const getEmployees = (companyId, params = {}) => axios.get(
-  `${BASE}/${companyId}/employee`,
-  {
-    params
+export const getEmployees = (companyId, perPage = PER_PAGE, pageNum = '', sortBy = 'id', order = 'desc') => {
+  if (pageNum) {
+    pageNum = `?page=${pageNum}`
   }
-)
+  return axios.get(
+  `${BASE}/${companyId}/employee/pages/${perPage}/${order}/${sortBy}${pageNum}`)
+}
 
 const appendVerb = (verb, formData) => {
   formData.append('_method', verb)
@@ -117,11 +144,13 @@ const appendPutMethod = (data) => {
 
 export default {
   getCompany,
+  getCounts,
   getAllCompanies,
   createCompany,
   updateCompany,
   deleteCompany,
   getEmployees,
+  deleteEmployee,
   createEmployee,
   updateEmployee
 }

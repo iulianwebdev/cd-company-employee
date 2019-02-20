@@ -1,5 +1,11 @@
 <template>
     <div class="companies-wrapper">
+        <div class="actions">
+            <router-link :to="{name: 'dashboard'}"><i class="fa fa-arrow-left"></i></router-link>
+            <button class="btn btn-primary pull-right" v-on:click="add">
+                <i class="fa fa-plus"></i> Add
+            </button>
+        </div>
         <div class="list-group">
             <a v-on:click="gotoCompany(company.id)" class="list-group-item" v-for="company in companies" v-bind:key="company.id">
                 <span class="badge">Employees: {{ company.employee_count }}</span>
@@ -8,11 +14,6 @@
             </a> 
         </div>
 
-        <div class="col-xs-12 text-center">
-            <button class="btn btn-app" v-on:click="add">
-                <i class="fa fa-plus"></i> Add
-            </button>
-        </div>
 
         <modal v-on:close="closeModal" v-show="modalVisible" :save="false">
             <template v-slot:header>Create New Company</template>
@@ -28,6 +29,8 @@
     import http from '../services/http'
     import pathMixin from '../mixins/paths'
     import modalMixin from '../mixins/modal'
+    import sortMixin from '../mixins/sort'
+    import paginateMixin from '../mixins/paginate'
     import {
         SET_COMPANIES,
         SET_COMPANY,
@@ -47,7 +50,7 @@
                 {companies: COMPANIES}
             )
         },
-        mixins:[pathMixin, modalMixin],
+        mixins:[pathMixin, modalMixin, sortMixin, paginateMixin],
         watch: {
             $route:'get'
         },

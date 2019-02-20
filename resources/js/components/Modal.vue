@@ -17,7 +17,9 @@
               <div class="modal-footer" v-if="this.save">
                     <button type="button" class="btn btn-default pull-left" v-on:click="close">Close</button>
                     
-                    <button type="button" class="btn btn-primary" v-on:click="action" >
+                    <button type="button" class="btn" 
+                      v-bind:class="{'btn-primary': type != 'danger', 'btn-danger': type == 'danger'}" 
+                      v-on:click="action" >
                         <slot name="action">
                             Save changes
                         </slot>
@@ -30,13 +32,13 @@
 <script>
     export default {
         name: 'modal',
-        props: ['save'],
+        props: ['save', 'type'],
         methods: {
             close() {
                 this.$emit('close');
             },
             action(){
-                this.$emit();
+                this.$emit('action');
             }
         },
     }

@@ -18,5 +18,6 @@ export const FETCH_ALL_EMPLOYEES = 'FETCH_ALL_EMPLOYEES'
 export const FETCH_COMPANY_EMPLOYEES = 'FETCH_COMPANY_EMPLOYEES'
 
 export const FLASH_SUCCESS_TIME = 1000
+export const PER_PAGE = 10
 export const BASE_IMG_PATH = '/storage/images/'
 export const DEFAULT_IMG_THUMBNAIL = 'storage/noimage-thumbnail.png'

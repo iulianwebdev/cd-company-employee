@@ -1,7 +1,9 @@
 const modalMixin = {
   data () {
     return {
-      modalVisible: false
+      modalVisible: false,
+      type: '',
+      showLoader: false
     }
   },
   methods: {
@@ -10,7 +12,14 @@ const modalMixin = {
     },
     closeModal () {
       this.modalVisible = false
+    },
+    loading () {
+      this.showLoader = true
+    },
+    stopLoading () {
+      this.showLoader = false
     }
+
   }
 }
 

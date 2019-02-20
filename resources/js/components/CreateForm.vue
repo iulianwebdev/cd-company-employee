@@ -153,7 +153,7 @@ export default {
 
             promise.then(({data}) => {
                 this.stopLoading()
-                    this.$store.commit(SET_EMPLOYEE, this.companyId, {...data})
+                    // this.$store.commit(SET_EMPLOYEE, {companyId:this.companyId, data})
               
                     this.showSuccess(this.type.toUpperCase() + ' has been saved succesfully!');
                 }, ({response}) => {

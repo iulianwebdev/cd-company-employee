@@ -13,13 +13,19 @@ export const getters = {
   [COMPANY]: (state) => (id) => {
     return state.companies.find(_ => _.id === +id)
   },
-  [COMPANY_EMPLOYEES]: (state) => (id) => {
-    return state.employees[id] || []
+  [COMPANY_EMPLOYEES]: (state) => (companyId) => {
+    return state.employees[companyId] || []
   },
-  [EMPLOYEES] (state) {
-    return state.employees
+  [EMPLOYEES]: (state) => (companyId) => {
+    if (!state.employees[companyId]) {
+      return []
+    }
+    return state.employees[companyId]
   },
-  [EMPLOYEE]: (state) => (id) => {
+  [EMPLOYEE]: (state) => (companyId, id) => {
+    if (!state.employees[companyId]) {
+      return []
+    }
     return state.employees.find(_ => _.id === +id)
   }
 }

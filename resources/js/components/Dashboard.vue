@@ -4,14 +4,14 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3 title="Loaded">{{Object.values(employees).length}}</h3>
+              <h3 title="Loaded">{{employeesCount}}</h3>
 
               <p>Employees</p>
             </div>
             <div class="icon">
               <i class="fa fa-user"></i>
             </div>
-            <router-link :to="{name:'employees'}" class="small-box-footer">
+            <router-link :to="{name:'all-employees'}" class="small-box-footer">
               More info <i class="fa fa-arrow-circle-right"></i>
             </router-link>
           </div>
@@ -20,7 +20,7 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3 title="Loaded">{{companies.length}}</h3>
+              <h3 title="Loaded">{{companiesCount}}</h3>
 
               <p>Companies</p>
             </div>
@@ -38,17 +38,22 @@
 <script>
 import {mapGetters} from 'vuex'
 import {COMPANIES, EMPLOYEES} from '../store/constants'
+import http from '../services/http';
 
     export default {
         name:'dashboard',
-        computed: {
-            ...mapGetters({
-                'companies': COMPANIES,
-                'employees': EMPLOYEES
-
-            })
+        data(){
+          return {
+            companiesCount: 0,
+            employeesCount: 0,
+          }
         },
         mounted() {
+          http.getCounts().then(({data}) => {
+            console.log(data)
+            this.companiesCount = data.company_counts;
+            this.employeesCount = data.employee_counts;
+          })
             console.log('Component mounted.')
         }
     }
