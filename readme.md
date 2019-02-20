@@ -24,7 +24,7 @@ $ npm run dev
 create an image in the storage/app/public folder and make sure the permissions are set on the storage folder (recursively)
 ```$
 mkdir storage/app/public/images
-chomd 755 -R /storage
+chomd 775 -R /storage
 ```
 and create an .env file from the .env.example and fill in DB details
 ```$
